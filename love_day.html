@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Love Forever</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* --- Base page --- */
+    body {
+      background: radial-gradient(circle, #1a0512 0%, #000000 100%);
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    /* --- Links antigos ocultados para manter o clima romântico --- */
+    .quick-link {
+      display: none;
+    }
+
+    /* --- Love words --- */
+    #ui .love {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -225px 0 0 -225px;
+      --i: 1;
+    }
+    #ui .love:last-child .love_word {
+      color: #ea80b0;
+      font-size: 1.4rem;
+      text-shadow: 0 0 10px #fff;
+    }
+
+    #ui .love_word {
+      color: #ea80b0;
+      font-size: 1.4rem;
+      transform: translateY(-100%) rotateZ(-30deg);
+      text-shadow: 0 0 10px #fff;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    #ui .love_horizontal {
+      animation: horizontal 10000ms infinite alternate ease-in-out;
+      animation-delay: calc(var(--i) * -300ms);
+    }
+    #ui .love_vertical {
+      animation: vertical 20000ms infinite linear;
+      animation-delay: calc(var(--i) * -300ms);
+    }
+
+    /* --- Animations (Originais) --- */
+    @keyframes horizontal {
+      from { transform: translateX(0px); }
+      to   { transform: translateX(450px); }
+    }
+    @keyframes vertical {
+      0%   { transform: translateY(180px); }
+      10%  { transform: translateY(45px); }
+      15%  { transform: translateY(4.5px); }
+      18%  { transform: translateY(0px); }
+      20%  { transform: translateY(4.5px); }
+      22%  { transform: translateY(34.61538px); }
+      24%  { transform: translateY(64.28571px); }
+      25%  { transform: translateY(112.5px); }
+      26%  { transform: translateY(64.28571px); }
+      28%  { transform: translateY(34.61538px); }
+      30%  { transform: translateY(4.5px); }
+      32%  { transform: translateY(0px); }
+      35%  { transform: translateY(4.5px); }
+      40%  { transform: translateY(45px); }
+      50%  { transform: translateY(180px); }
+      71%  { transform: translateY(428.57143px); }
+      72.5%{ transform: translateY(441.17647px); }
+      75%  { transform: translateY(450px); }
+      77.5%{ transform: translateY(441.17647px); }
+      79%  { transform: translateY(428.57143px); }
+      100% { transform: translateY(180px); }
+    }
+
+    /* --- Tela de Play (Overlay) --- */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1s ease, visibility 1s;
+    }
+
+    #play-button {
+      background: rgba(234, 128, 176, 0.15);
+      border: 2px solid #ea80b0;
+      color: #fff;
+      padding: 18px 35px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 0 20px rgba(234, 128, 176, 0.4);
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      animation: heartPulse 1.8s infinite ease-in-out;
+    }
+
+    #play-button:hover {
+      background: #ea80b0;
+      box-shadow: 0 0 35px #ea80b0;
+      transform: scale(1.05);
+    }
+
+    #play-button svg {
+      fill: currentColor;
+    }
+
+    @keyframes heartPulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(234, 128, 176, 0.4); }
+      30% { transform: scale(1.06); box-shadow: 0 0 30px rgba(234, 128, 176, 0.7); }
+      60% { transform: scale(1); box-shadow: 0 0 20px rgba(234, 128, 176, 0.4); }
+    }
+  </style>
+  
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+
+  <div id="overlay">
+    <button id="play-button" onclick="startSurprise()">
+      <svg width="20" height="20" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+      Clique aqui, de: Mim para Você 💖
+    </button>
+  </div>
+
+  <div id="youtube-player" style="position: fixed; bottom: -300px; right: -300px; opacity: 0.01; pointer-events: none; z-index: -1;"></div>
+
+  <div id="ui"></div>
+
+  <script>
+    // ID Correto e limpo da sua música
+    const YOUTUBE_VIDEO_ID = 'GhQxrCrVSyw'; 
+
+    // Criação dos textos "I love you"
+    const N = 100;     
+    const ui = document.getElementById('ui');
+
+    for (let i = 1; i <= N; i++) {
+      const love = document.createElement('div');
+      love.className = 'love';
+      love.style.setProperty('--i', i);
+
+      const h = document.createElement('div');
+      h.className = 'love_horizontal';
+
+      const v = document.createElement('div');
+      v.className = 'love_vertical';
+
+      const word = document.createElement('div');
+      word.className = 'love_word';
+      word.textContent = 'I love you';
+
+      v.appendChild(word);
+      h.appendChild(v);
+      love.appendChild(h);
+      ui.appendChild(love);
+    }
+
+    // Inicialização do Player oficial do YouTube
+    let player;
+    function onYouTubeIframeAPIReady() {
+      if (YOUTUBE_VIDEO_ID) {
+        player = new YT.Player('youtube-player', {
+          height: '200',
+          width: '200',
+          videoId: YOUTUBE_VIDEO_ID,
+          playerVars: {
+            'autoplay': 0,
+            'controls': 0,
+            'loop': 1,
+            'playlist': YOUTUBE_VIDEO_ID,
+            'modestbranding': 1,
+            'rel': 0
+          }
+        });
+      }
+    }
+
+    // Ação ao clicar no botão
+    function startSurprise() {
+      const overlay = document.getElementById('overlay');
+      
+      // Remove a tela inicial com efeito suave
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.visibility = 'hidden';
+      }, 1000);
+
+      // Dá o play no áudio de forma segura
+      if (player && typeof player.playVideo === 'function') {
+        player.playVideo();
+      } else {
+        // Fallback caso a API demore a carregar por causa da conexão
+        const container = document.getElementById('youtube-player');
+        container.innerHTML = `<iframe width="200" height="200" src="https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0" frameborder="0" allow="autoplay" style="width:100%; height:100%;"></iframe>`;
+      }
+    }
+  </script>
+</body>
+</html>
